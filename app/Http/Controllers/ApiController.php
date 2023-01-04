@@ -53,32 +53,33 @@ class ApiController extends Controller
                         'updated_at' => date('Y-m-d H:i:s'),
                     ];
                 }
-                if ($data['next_page_token']) { //หากมีข้อมูลมากกว่า 20 record จะดึงมาเพิ่มอีก
-                    $pageToken = $data['next_page_token'];
-                    for ($runApi = 1; $runApi <= 2; $runApi++) {
-                        $dataNextPage = null;
-                        $dataNextPage = SendRequest::FindRestaurant($location['lat'], $location['lng'], $pageToken);
-                        foreach ($dataNextPage['results'] as $key => $value) {
-                            $finalArray[] = [
-                                'place_id' => $value['place_id'],
-                                'search' => $search,
-                                'name' => $value['name'],
-                                'geometry_lat' => !empty($value['geometry']['location']['lat']) ? $value['geometry']['location']['lat']: null,
-                                'geometry_lng' => !empty($value['geometry']['location']['lng']) ? $value['geometry']['location']['lat']: null,
-                                'rating' => !empty($value['rating']) ? $value['rating']:  null,
-                                'user_ratings_total'=> !empty($value['user_ratings_total']) ? $value['user_ratings_total']: 0,
-                                'types'=> json_encode($value['types']),
-                                'vicinity' => $value['vicinity'],
-                                'icon_url'=> $value['icon'],
-                                'full_data'=> json_encode($value),
-                                'photo' => !empty($value['photos'][0]['photo_reference']) ? $base_url_photo.$value['photos'][0]['photo_reference']: null,
-                                'created_at' => date('Y-m-d H:i:s'),
-                                'updated_at' => date('Y-m-d H:i:s'),
-                            ];
-                        }
-                    }
-                    Restaurants::upsert($finalArray, 'place_id'); // ทำการบันทึกแบบข้อมูล หาข้อมูลซ้ำจะ update แทน
-                }
+
+//                if ($data['next_page_token']) { //หากมีข้อมูลมากกว่า 20 record จะดึงมาเพิ่มอีก --> ปิดไว้ก่อนเนื่องจากมีบัค
+//                    $pageToken = $data['next_page_token'];
+//                    for ($runApi = 1; $runApi <= 2; $runApi++) {
+//                        $dataNextPage = null;
+//                        $dataNextPage = SendRequest::FindRestaurant($location['lat'], $location['lng'], $pageToken);
+//                        foreach ($dataNextPage['results'] as $key => $value) {
+//                            $finalArray[] = [
+//                                'place_id' => $value['place_id'],
+//                                'search' => $search,
+//                                'name' => $value['name'],
+//                                'geometry_lat' => !empty($value['geometry']['location']['lat']) ? $value['geometry']['location']['lat']: null,
+//                                'geometry_lng' => !empty($value['geometry']['location']['lng']) ? $value['geometry']['location']['lat']: null,
+//                                'rating' => !empty($value['rating']) ? $value['rating']:  null,
+//                                'user_ratings_total'=> !empty($value['user_ratings_total']) ? $value['user_ratings_total']: 0,
+//                                'types'=> json_encode($value['types']),
+//                                'vicinity' => $value['vicinity'],
+//                                'icon_url'=> $value['icon'],
+//                                'full_data'=> json_encode($value),
+//                                'photo' => !empty($value['photos'][0]['photo_reference']) ? $base_url_photo.$value['photos'][0]['photo_reference']: null,
+//                                'created_at' => date('Y-m-d H:i:s'),
+//                                'updated_at' => date('Y-m-d H:i:s'),
+//                            ];
+//                        }
+//                    }
+//                }
+                Restaurants::upsert($finalArray, 'place_id'); // ทำการบันทึกแบบข้อมูล หาข้อมูลซ้ำจะ update แทน
             }
             $findData = Restaurants::where("search",'like' ,'%' . $search . '%')->paginate($perpage, ['*'], 'page', $page);
         }

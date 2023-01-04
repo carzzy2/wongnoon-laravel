@@ -31,23 +31,24 @@ class SendRequest
     /**
      * @param $lat
      * @param $lng
-     * @param $pagetoken
+     * @param string $pagetoken
      * @return mixed
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public static function FindRestaurant($lat, $lng, $pagetoken){ // นำ area มาใช้หาร้าน
+    public static function FindRestaurant($lat, $lng, $pagetoken =''){ // นำ area มาใช้หาร้าน
         $latlng = $lat.",".$lng;
         $key = env('GOOGLE_KEY', '');
         $radius = "10000"; // 10 km
-//        $url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latlng&radius=$radius&type=restaurant&key=$key";
         $url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' . $latlng . '&radius=' . $radius . '&type=restaurant&key=' . $key;
         if (!empty($pagetoken)) {
             $url .= '&pagetoken=' . $pagetoken;
+            dd($url);
         }
         $client = new \GuzzleHttp\Client();
         $res = $client->request('GET', $url);
         $content = $res->getBody()->getContents();
         $responseJson = json_decode($content, true);
+
         return $responseJson;
     }
 
