@@ -81,7 +81,7 @@ class ApiController extends Controller
 //                }
                 Restaurants::upsert($finalArray, 'place_id'); // ทำการบันทึกแบบข้อมูล หาข้อมูลซ้ำจะ update แทน
             }
-            $findData = Restaurants::where("search",'like' ,'%' . $search . '%')->paginate($perpage, ['*'], 'page', $page);
+            $findData = Restaurants::where("search",$search)->paginate($perpage, ['*'], 'page', $page);
         }
         return $findData;
     }
