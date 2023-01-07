@@ -42,8 +42,10 @@ class SendRequest
         $url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' . $latlng . '&radius=' . $radius . '&type=restaurant&key=' . $key;
         if (!empty($pagetoken)) {
             $url .= '&pagetoken=' . $pagetoken;
-            dd($url);
         }
+//        $responseJson = file_get_contents($url);
+//        $responseJson = json_decode($responseJson, true);
+
         $client = new \GuzzleHttp\Client();
         $res = $client->request('GET', $url);
         $content = $res->getBody()->getContents();

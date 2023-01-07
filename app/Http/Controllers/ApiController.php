@@ -25,7 +25,7 @@ class ApiController extends Controller
         $page = $request->get('page', 1);
         $key = env('GOOGLE_KEY', '');
         $base_url_photo = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&key=$key&photoreference="; // base url สำหรับดูรูป
-        $findData = Restaurants::where("search",'like' ,'%' . $search . '%')->paginate($perpage, ['*'], 'page', $page);
+        $findData = Restaurants::where("search",$search)->paginate($perpage, ['*'], 'page', $page);
         if (count($findData) == 0) {
             if($search ==''){
                 $search = 'bang sue'; //ถ้าไม่มีข้อมูลเลยให้ default ดึงค่า
